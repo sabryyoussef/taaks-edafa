@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Report Template -->
+    <template id="report_group_general_trial_balance">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-if="start_date or end_date or journals_name or state">
+                    <div style="padding:10px; font-size: 12px;">
+                        <t t-if="start_date">
+                            من تاريخ :
+                            <t t-esc="start_date"/><br/><br/>
+                        </t>
+                        <t t-if="end_date">
+                            الى تاريخ :
+                            <t t-esc="end_date"/><br/><br/>
+                        </t>
+                        <t t-if="journals_name">
+                            Journals:
+                            <t t-esc="journals_name"/><br/><br/>
+                        </t>
+                        <t t-if="state">
+                            State:
+                            <t t-esc="state"/><br/><br/>
+                        </t>
+                    </div>
+                </t>
+                <div class="page">
+                    <center>
+                    <t t-if="company_name">
+                    <h2 style="font-size: 14px;"><span t-esc="company_name"/></h2>
+                    </t>
+                        <t t-if="query">
+                            
+                            <h2 style="font-size: 14px;">ميزان المراجعة العام</h2>
+                        </t>
+                        <t t-else="">
+                            <h3 style="font-size: 12px;">لا يوجد بيانات</h3>
+                        </t>
+                    </center>
+                </div>
+                <br/>
+                <t t-if="query">
+                    <table class="table table-sm" style="font-size: 10px;">
+                        <thead>
+                            <tr>
+                                <th colspan="3"></th>
+                                <th colspan="2">الرصيد السابق</th>
+                                <th colspan="2">الحركة</th>
+                                <th colspan="2">الرصيد النهائي</th>
+                            </tr>
+                            <tr>
+                                <th>كود</th>
+                                <th>الحساب</th>
+                                <th>نوع الحساب</th>
+                                <th> مدين</th>
+                                <th> دائن </th>
+                                <!-- <th>Init Balance</th> -->
+                                <th>مدين</th>
+                                <th>دائن</th>
+                                <!-- <th>Balance</th> -->
+                                <th>مدين</th>
+                                <th>دائن</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="query" t-as="i">
+                                <td>
+                                    <span t-esc="i['code']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="i['ac_name']"/>
+                                </td>
+                                <td>
+                              <span t-esc="i['account_type_display']"/> <!-- Add this line to display account type -->
+                                </td>
+                                <td>
+                                    <span t-esc="i['initial_debit']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="i['initial_credit']"/>
+                                </td>
+                                <!-- <td>
+                                    <span t-esc="i['initial_balance']"/>
+                                </td> -->
+                                <td>
+                                    <span t-esc="i['debit']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="i['credit']"/>
+                                </td>
+                                <!-- <td>
+                                    <span t-esc="i['balance']"/>
+                                </td> -->
+                                   <td>
+                                    <span t-esc="i['initial_debit'] + i['debit']"/>
+                                </td>
+                                <td>
+                                      <span t-esc="i['initial_credit'] + i['credit']"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align:center; font-size: 12px;">
+                                    <b>المجموع</b>
+                                </td>
+                                <td>
+                                    <b>
+                                        <span t-esc="total_init_debit"/>
+                                    </b>
+                                </td>
+                                <td>
+                                    <b>
+                                        <span t-esc="total_init_credit"/>
+                                    </b>
+                                </td>
+                                <!-- <td>
+                                    <b>
+                                        <span t-esc="total_init_balance"/>
+                                    </b>
+                                </td> -->
+                                <td>
+                                    <b>
+                                        <span t-esc="total_debit"/>
+                                    </b>
+                                </td>
+                                <td>
+                                    <b>
+                                        <span t-esc="total_credit"/>
+                                    </b>
+                                </td>
+                                <!-- <td>
+								
+                                    <b>
+
+                                       <span t-esc="balance"/>
+                                    </b>
+                                </td> -->
+                                 <td>
+                                    <b>
+                                        <span t-esc="total_init_debit + total_debit"/>
+                                    </b>
+                                </td>
+                                <td>
+                                    <b>
+                                        <span t-esc="total_init_credit + total_credit"/>
+                                    </b>
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Paper Format -->
+    <record id="tam_paperformat_land" model="report.paperformat">
+        <field name="name">New TAM Landscape</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field> <!-- Predefined format -->
+        <field name="orientation">Landscape</field> <!-- Landscape orientation -->
+        <field name="margin_top">35.00</field>
+        <field name="margin_bottom">30.00</field>
+        <field name="margin_left">7.00</field>
+        <field name="margin_right">7.00</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">35</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- Report Action -->
+    <record id="action_report_group_general_trial_balance" model="ir.actions.report">
+        <field name="name">General Trial Balance</field>
+        <field name="model">trial.balance.general.group</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">trial_balance_general_acount_group.report_group_general_trial_balance</field>
+        <field name="report_file">trial_balance_general_acount_group.report_group_general_trial_balance</field>
+        <field name="binding_model_id" ref="model_trial_balance_general_group"/>
+        <field name="paperformat_id" ref="tam_paperformat_land"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>
