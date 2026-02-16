@@ -37,6 +37,9 @@
         'report/trial_balance_report.xml',
         'wizard/trial_balance_report_view.xml',
     ],
+    'demo': [
+        'demo/demo.xml',
+    ],
     'images': ['static/description/banner.png'],
     'license': 'AGPL-3',
     'installable': True,

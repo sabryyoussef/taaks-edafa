@@ -19,6 +19,9 @@
         'wizard/trial_balance_report_view.xml',
         'views/account_account.xml',
     ],
+    'demo': [
+        'demo/demo.xml',
+    ],
     'images': ['static/description/banner.png'],
     'license': 'AGPL-3',
     'installable': True,

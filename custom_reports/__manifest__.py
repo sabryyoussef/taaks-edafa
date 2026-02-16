@@ -28,6 +28,9 @@
         'views/views.xml',
         'views/templates.xml',
     ],
+    'demo': [
+        'demo/demo.xml',
+    ],
     'license': 'LGPL-3',
     'installable': True,
     'application': False,

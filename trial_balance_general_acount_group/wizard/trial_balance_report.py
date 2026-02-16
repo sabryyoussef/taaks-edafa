@@ -58,7 +58,7 @@ class TrialBalanceGeneralGroup(models.TransientModel):
             initial_parameters.append(self.start_date)
         if self.company_id:
             initial_conditions.append("account_move_line.company_id = %s")
-            initial_parameters.append(str(self.company_id.id))
+            initial_parameters.append(self.company_id.id)
         if self.journals_ids:
             journal_ids = [journal.id for journal in self.journals_ids]
             initial_conditions.append("journal_id IN %s")
@@ -100,7 +100,7 @@ class TrialBalanceGeneralGroup(models.TransientModel):
             parameters.append(self.end_date)
         if self.company_id:
             where_conditions.append("account_move_line.company_id = %s")
-            parameters.append(str(self.company_id.id))
+            parameters.append(self.company_id.id)
         if self.state == 'posted':
             where_conditions.append("parent_state = 'posted'")
         if self.state == 'draft':

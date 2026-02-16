@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Demo partners -->
+        <record id="custom_reports_demo_partner_1" model="res.partner">
+            <field name="name">Demo Employee A</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="custom_reports_demo_partner_2" model="res.partner">
+            <field name="name">Demo Employee B</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <!-- Demo accounts -->
+        <record id="custom_reports_demo_account_custody" model="account.account">
+            <field name="name">Demo Custody Account</field>
+            <field name="code">CUST-DEMO</field>
+            <field name="account_type">asset_current</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="custom_reports_demo_account_counterpart" model="account.account">
+            <field name="name">Demo Counterpart Account</field>
+            <field name="code">CP-DEMO</field>
+            <field name="account_type">liability_current</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <!-- Demo journal -->
+        <record id="custom_reports_demo_journal" model="account.journal">
+            <field name="name">Demo General Journal (Custody)</field>
+            <field name="code">CUD</field>
+            <field name="type">general</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="default_account_id" ref="custom_reports.custom_reports_demo_account_counterpart"/>
+        </record>
+
+        <!-- Demo entries (kept as draft; report does not filter on posted) -->
+        <record id="custom_reports_demo_move_before" model="account.move">
+            <field name="move_type">entry</field>
+            <field name="date">2026-01-01</field>
+            <field name="journal_id" ref="custom_reports.custom_reports_demo_journal"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="line_ids" eval="[(0, 0, {
+                'name': 'Previous balance - custody',
+                'account_id': ref('custom_reports.custom_reports_demo_account_custody'),
+                'partner_id': ref('custom_reports.custom_reports_demo_partner_1'),
+                'debit': 50.0,
+                'credit': 0.0
+            }), (0, 0, {
+                'name': 'Previous balance - counterpart',
+                'account_id': ref('custom_reports.custom_reports_demo_account_counterpart'),
+                'partner_id': ref('custom_reports.custom_reports_demo_partner_1'),
+                'debit': 0.0,
+                'credit': 50.0
+            })]"/>
+        </record>
+
+        <record id="custom_reports_demo_move_in_period" model="account.move">
+            <field name="move_type">entry</field>
+            <field name="date">2026-01-15</field>
+            <field name="journal_id" ref="custom_reports.custom_reports_demo_journal"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="line_ids" eval="[(0, 0, {
+                'name': 'Custody movement',
+                'account_id': ref('custom_reports.custom_reports_demo_account_custody'),
+                'partner_id': ref('custom_reports.custom_reports_demo_partner_1'),
+                'debit': 100.0,
+                'credit': 0.0
+            }), (0, 0, {
+                'name': 'Custody movement - counterpart',
+                'account_id': ref('custom_reports.custom_reports_demo_account_counterpart'),
+                'partner_id': ref('custom_reports.custom_reports_demo_partner_1'),
+                'debit': 0.0,
+                'credit': 100.0
+            }), (0, 0, {
+                'name': 'Custody credit',
+                'account_id': ref('custom_reports.custom_reports_demo_account_custody'),
+                'partner_id': ref('custom_reports.custom_reports_demo_partner_2'),
+                'debit': 0.0,
+                'credit': 20.0
+            }), (0, 0, {
+                'name': 'Custody credit - counterpart',
+                'account_id': ref('custom_reports.custom_reports_demo_account_counterpart'),
+                'partner_id': ref('custom_reports.custom_reports_demo_partner_2'),
+                'debit': 20.0,
+                'credit': 0.0
+            })]"/>
+        </record>
+
+        <!-- Demo wizard record (uses fields shown in the view) -->
+        <record id="custom_reports_demo_wizard" model="custom.reports">
+            <field name="company_id" ref="base.main_company"/>
+            <field name="start_date">2026-01-01</field>
+            <field name="end_date">2026-01-31</field>
+            <field name="account_id" ref="custom_reports.custom_reports_demo_account_custody"/>
+            <field name="account_partner_ids" eval="[(6, 0, [
+                ref('custom_reports.custom_reports_demo_partner_1'),
+                ref('custom_reports.custom_reports_demo_partner_2')
+            ])]"/>
+        </record>
+    </data>
+</odoo>
