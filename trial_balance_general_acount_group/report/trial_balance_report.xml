@@ -157,7 +157,7 @@
     <!-- Paper Format -->
     <record id="tam_paperformat_land" model="report.paperformat">
         <field name="name">New TAM Landscape</field>
-        <field name="default" eval="True"/>
+        <field name="default" eval="False"/>
         <field name="format">A4</field> <!-- Predefined format -->
         <field name="orientation">Landscape</field> <!-- Landscape orientation -->
         <field name="margin_top">35.00</field>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Demo account group -->
+        <record id="trial_balance_group_demo_group" model="account.group">
+            <field name="name">Demo Group (Assets)</field>
+            <field name="code_prefix_start">ZZ</field>
+            <field name="code_prefix_end">ZZ</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <!-- Demo accounts within the group -->
+        <record id="trial_balance_group_demo_account_1" model="account.account">
+            <field name="name">Demo Group Account 1</field>
+            <field name="code">ZZ0001</field>
+            <field name="account_type">asset_current</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="trial_balance_group_demo_counterpart" model="account.account">
+            <field name="name">Demo Group Counterpart</field>
+            <field name="code">200001</field>
+            <field name="account_type">liability_current</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <!-- Demo journal -->
+        <record id="trial_balance_group_demo_journal" model="account.journal">
+            <field name="name">Demo General Journal (Grouped TB)</field>
+            <field name="code">TBG</field>
+            <field name="type">general</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="default_account_id" ref="trial_balance_general_acount_group.trial_balance_group_demo_counterpart"/>
+        </record>
+
+        <!-- Demo moves -->
+        <record id="trial_balance_group_demo_move_before" model="account.move">
+            <field name="move_type">entry</field>
+            <field name="date">2026-01-01</field>
+            <field name="journal_id" ref="trial_balance_general_acount_group.trial_balance_group_demo_journal"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="line_ids" eval="[(0, 0, {
+                'name': 'Initial debit',
+                'account_id': ref('trial_balance_general_acount_group.trial_balance_group_demo_account_1'),
+                'debit': 300.0,
+                'credit': 0.0
+            }), (0, 0, {
+                'name': 'Initial debit - counterpart',
+                'account_id': ref('trial_balance_general_acount_group.trial_balance_group_demo_counterpart'),
+                'debit': 0.0,
+                'credit': 300.0
+            })]"/>
+        </record>
+
+        <record id="trial_balance_group_demo_move_in_period" model="account.move">
+            <field name="move_type">entry</field>
+            <field name="date">2026-01-20</field>
+            <field name="journal_id" ref="trial_balance_general_acount_group.trial_balance_group_demo_journal"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="line_ids" eval="[(0, 0, {
+                'name': 'Period credit',
+                'account_id': ref('trial_balance_general_acount_group.trial_balance_group_demo_account_1'),
+                'debit': 0.0,
+                'credit': 60.0
+            }), (0, 0, {
+                'name': 'Period credit - counterpart',
+                'account_id': ref('trial_balance_general_acount_group.trial_balance_group_demo_counterpart'),
+                'debit': 60.0,
+                'credit': 0.0
+            })]"/>
+        </record>
+
+        <!-- Demo wizard record (TransientModel; for UI demo only) -->
+        <record id="trial_balance_group_demo_wizard" model="trial.balance.general.group">
+            <field name="company_id" ref="base.main_company"/>
+            <field name="start_date">2026-01-01</field>
+            <field name="end_date">2026-01-31</field>
+            <field name="state">draft</field>
+            <field name="account_group_ids" eval="[(6, 0, [ref('trial_balance_general_acount_group.trial_balance_group_demo_group')])]"/>
+        </record>
+    </data>
+</odoo>

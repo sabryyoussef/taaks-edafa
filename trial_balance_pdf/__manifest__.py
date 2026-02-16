@@ -21,7 +21,7 @@
 #############################################################################
 {
     'name': "Trial Balance PDF Report",
-    # 'version': '16.0.1.0.0',
+    'version': '19.0.1.0.0',
     'category': "Accounting",
     'summary': """This module will helps to get the trial balance report in 
     PDF format""",
@@ -36,6 +36,9 @@
         'security/ir.model.access.csv',
         'report/trial_balance_report.xml',
         'wizard/trial_balance_report_view.xml',
+    ],
+    'demo': [
+        'demo/demo.xml',
     ],
     'images': ['static/description/banner.png'],
     'license': 'AGPL-3',
