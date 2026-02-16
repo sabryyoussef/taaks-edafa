@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="employee_custody_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <div class="page">
+                    <h2 style="text-align: center;">Employee Custody Report</h2>
+                    <p style="text-align: center;">
+                        <strong>Company:</strong>
+                        <t t-esc="doc.company_id.name"/>
+                    </p>
+                    <p style="text-align: center;">
+                        <strong>Period:</strong>
+                        <t t-esc="doc.start_date"/>
+                        to
+                        <t t-esc="doc.end_date"/>
+                    </p>
+
+                    <table class="table table-bordered" style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="border:1px solid black;text-align:center;">
+                                <th style="border:1px solid black;text-align:center;">Account No.</th>
+                                <th style="border:1px solid black;text-align:center;">Account Name</th>
+                                <th style="border:1px solid black;text-align:center;">Previous Balance</th>
+                                <th style="border:1px solid black;text-align:center;">Debit</th>
+                                <th style="border:1px solid black;text-align:center;">Credit</th>
+                                <th style="border:1px solid black;text-align:center;">Final Balance</th>
+                            </tr>
+                        </thead>
+                        <t t-set="total_previous_balance" t-value="0"/>
+                        <t t-set="total_debit" t-value="0"/>
+                        <t t-set="total_credit" t-value="0"/>
+                        <t t-set="total_final_balance" t-value="0"/>
+                        <tbody>
+                            <t t-foreach="doc.get_data()" t-as="line">
+                                <tr>
+                                    <td style="border:1px solid black;text-align:center;">
+                                        <t t-esc="line['code']"/>
+                                    </td>
+                                    <td style="border:1px solid black;text-align:center;">
+                                        <t t-esc="line['name']"/>
+                                    </td>
+                                    <td style="border:1px solid black;text-align:center;">
+                                        <t t-esc="'{:.2f}'.format(line['previous_balance'])"/>
+                                    </td>
+                                    <td style="border:1px solid black;text-align:center;">
+                                        <t t-esc="'{:.2f}'.format(line['debit'])"/>
+                                    </td>
+                                    <td style="border:1px solid black;text-align:center;">
+                                        <t t-esc="'{:.2f}'.format(line['credit'])"/>
+                                    </td>
+                                    <td style="border:1px solid black;text-align:center;">
+                                        <t t-esc="'{:.2f}'.format(line['final'])"/>
+                                    </td>
+
+                                    <t t-set="total_previous_balance"
+                                       t-value="total_previous_balance + line['previous_balance']"/>
+                                    <t t-set="total_debit" t-value="total_debit + line['debit']"/>
+                                    <t t-set="total_credit" t-value="total_credit + line['credit']"/>
+                                    <t t-set="total_final_balance" t-value="total_final_balance + line['final']"/>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td style="border:1px solid black"/>
+                                <td style="border:1px solid black;text-align:center;font-weight: bold;">Total</td>
+                                <td style="border:1px solid black;text-align:center;">
+                                    <t t-esc="'{:.2f}'.format(total_previous_balance)"/>
+                                </td>
+                                <td style="border:1px solid black;text-align:center;">
+                                    <t t-esc="'{:.2f}'.format(total_debit)"/>
+                                </td>
+                                <td style="border:1px solid black;text-align:center;">
+                                    <t t-esc="'{:.2f}'.format(total_credit)"/>
+                                </td>
+                                <td style="border:1px solid black;text-align:center;">
+                                    <t t-esc="'{:.2f}'.format(total_final_balance)"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_employee_custody_report" model="ir.actions.report">
+        <field name="name">Employee Custody Report</field>
+        <field name="model">custom.reports</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_reports.employee_custody_report_template</field>
+        <field name="report_file">custom_reports.employee_custody_report_template</field>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>
+
+
